@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>축구 경기 결과</title>
+    <style>
+        body {
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 20%;
+        }
+    </style>
+</head>
+<body>
+    <p id="message">🔮 오늘의 축구 경기 결과는? 🔮</p>
+    <button onclick="fetchSoccerResults()">눌러서 확인하기</button>
+
+    <script>
+        async function fetchSoccerResults() {
+            try {
+                const response = await fetch('https://api.sportsdata.io/v3/soccer/scores/json/GamesByDate/2024-MAR-18?key=YOUR_API_KEY');
+                const games = await response.json();
+                
+                if (games.length === 0) {
+                    document.getElementById("message").innerText = "오늘 경기 결과가 없습니다.";
+                    return;
+                }
+
+                let resultText = "오늘의 축구 경기 결과:\n";
+                games.forEach(game => {
+                    resultText += `${game.AwayTeam.Name} ${game.AwayTeamScore} - ${game.HomeTeam.Name} ${game.HomeTeamScore}\n`;
+                });
+                
+                // Display results on the webpage
+                document.getElementById("message").innerText = resultText;
+            } catch (error) {
+                console.error("Error fetching soccer results:", error);
+                document.getElementById("message").innerText = "경기 결과를 가져오는 데 실패했습니다.";
+            }
+        }
+    </script>
+</body>
+</html>
